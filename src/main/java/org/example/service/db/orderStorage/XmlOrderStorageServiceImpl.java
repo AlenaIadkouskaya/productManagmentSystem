@@ -58,7 +58,7 @@ public class XmlOrderStorageServiceImpl implements OrderStorageService {
     }
 
     private String generateFileName() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
         return "orders_" + dateFormat.format(new Date()) + ".xml";
     }
 

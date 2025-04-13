@@ -9,22 +9,28 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-public class CurrencyService{
+public class CurrencyService {
 
     private static final String NBP_API_URL = "http://api.nbp.pl/api/exchangerates/rates/a/usd/%s?format=json";
 
     public double getExchangeRate(String date) throws Exception {
-        LocalDate requestedDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        try {
+            LocalDate requestedDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 
-        double exchangeRate = tryGetExchangeRate(requestedDate);
+            double exchangeRate = tryGetExchangeRate(requestedDate);
 
-        if (exchangeRate != -1) {
-            return exchangeRate;
-        } else {
-            LocalDate previousDate = requestedDate.minusDays(1);
-            return getExchangeRateFromPreviousDate(previousDate);
+            if (exchangeRate != -1) {
+                return exchangeRate;
+            } else {
+                LocalDate previousDate = requestedDate.minusDays(1);
+                return getExchangeRateFromPreviousDate(previousDate);
+            }
+        } catch (Exception e) {
+            throw new DateTimeParseException("Invalid date format", date, 0);
         }
+
     }
 
     private double tryGetExchangeRate(LocalDate date) throws Exception {
